@@ -1,9 +1,10 @@
-from robot import *
+#from robot import *
 import time
 print ("Modules imported")
 Speeds=[0.0,0.25,0.5,0.75,1,0.75,0.5,0.25,0.0,-0.25,-0.5,-0.75,-1,-0.75,-0.5,-0.25]
 
-
+cfactor_l = 1
+cfactor_r = 1
 speed_l = 0
 speed_r = 0
 r = Robot()
@@ -11,15 +12,17 @@ print ("Variables set")
 
 
 def set_speed(r, speed, wheel = 2):
+    global cfactor_l
+    global cfacot_r
     if wheel == 0:
-       r.motor_board.m0 = speed
+       r.motor_board.m0 = speed*cfactor_l
        print ("Left wheel speed override.")
     if wheel == 1:
-       r.motor_board.m1 = speed
+       r.motor_board.m1 = speed*cfactor_r
        print ("Right wheel speed override.")
     if wheel == 2:
-       r.motor_board.m0 = speed
-       r.motor_board.m1 = speed
+       r.motor_board.m0 = speed*cfactor_l
+       r.motor_board.m1 = speed*cfactor_r
        print ("Speed override.")
 
 def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
@@ -33,19 +36,21 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
     
     global speed_l
     global speed_r
+    global cfactor_l
+    global cfactor_r
 
     speeds_list = [speed_l, speed_r, speed_l]
     if stop>speeds_list[wheel]:
         if wheel == 0:
             while speed_l<stop:
                 speed_l = round((speed_l + interval), 2)
-                r.motor_board.m0 = speed_l
+                r.motor_board.m0 = speed_l*cfactor_l
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
         elif wheel == 1:
             while speed_r<stop:
                 speed_r = round((speed_r + interval), 2)
-                r.motor_board.m1 = speed_r
+                r.motor_board.m1 = speed_r*cfactor_r
                 time.sleep(delay)
             print("Right wheel speed set to "+str(speed_r*100)+"%")
 
@@ -54,8 +59,8 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
             while speed_l<stop:
                 speed_l = round((speed_l + interval), 2)
                 speed_r = speed_l
-                r.motor_board.m0 = speed_l
-                r.motor_board.m1 = speed_l
+                r.motor_board.m0 = speed_l*cfactor_l
+                r.motor_board.m1 = speed_l*cfactor_r
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
             print("Right wheel speed set to "+str(speed_r*100)+"%")
@@ -63,13 +68,13 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
         if wheel == 0:
             while speed_l>stop:
                 speed_l = round((speed_l - interval), 2)
-                r.motor_board.m0 = speed_l
+                r.motor_board.m0 = speed_l*cfactor_l
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
         elif wheel == 1:
             while speed_r>stop:
                 speed_r = round((speed_r - interval), 2)
-                r.motor_board.m1 = speed_r
+                r.motor_board.m1 = speed_r*cfactor_r
                 time.sleep(delay)
             print("Right wheel speed set to "+str(speed_r*100)+"%")
 
@@ -78,8 +83,8 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
             while speed_l>stop:
                 speed_l = round((speed_l - interval), 2)
                 speed_r = speed_l
-                r.motor_board.m0 = speed_l
-                r.motor_board.m1 = speed_l
+                r.motor_board.m0 = speed_l*cfactor_l
+                r.motor_board.m1 = speed_l*cfactor_r
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
             print("Right wheel speed set to "+str(speed_r*100)+"%")
@@ -87,6 +92,7 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
 
         
 def straighten(r, mode = 1):
+    """Stops a turn"""
     global speed_l
     global speed_r
 
@@ -114,6 +120,9 @@ def read_ultrasound(sensor):
 
 
 def turn2(r, direction):
+    """Turns the robot
+    :param direction: "l" for left, "r" for right
+    """
     global speed_r
     global speed_l
     dr = read_ultrasound(2)
@@ -142,6 +151,7 @@ def turn2(r, direction):
     
 
 def middle(r):
+    """Moves the robot away from the edge"""
     dr = read_ultrasound(2)
     dl = read_ultrasound(3)
     if dr<0.2:
@@ -167,6 +177,7 @@ def middle(r):
 
             
 def go2(r):
+    """Main running function"""
     set_speed(r, 0.2, wheel = 2)
     while True:
         df = read_ultrasound(1)
@@ -197,13 +208,17 @@ def go2(r):
                 
             
 def get_can(r):
+    """Gets the can"""
     accel(r, wheel = 2, stop = 0.5)
     time.sleep(5)
+    #r.grab() ##breaks front ultrasound sensor.
 
 print ("Functions set")        
           
 
 def test(r):
+    """Tests robot"""
+    
     global speed_r
     global speed_l
     print ("Accelerating.")
@@ -250,10 +265,32 @@ def test(r):
     print ("Distance right = "+str(dr)+" metres.")
     
     
+def calibrate(r):
+    global speed_r
+    global speed_l
+    print ("Left wheel testing.")
+    for i in range (2):
+        accel(r, wheel = 0, stop = 1)
+        time.sleep(40)
+        accel(r, wheel = 0, stop = 0)
+        time.sleep(10)
+#    for speed in range (5, 100, 5):
+#        set_speed(r, (speed/100), wheel = 0)
+#        time.sleep(20)
+#    print ("Right wheel testing.")
+#    accel(r, wheel = 1, stop = 1)
+#    time.sleep(40)
+#    accel(r, wheel = 1, stop = 0)
+
+#    for speed in range (5, 100, 5):
+#        set_speed(r, (speed/100), wheel = 1)
+#        time.sleep(20)
+    
+        
 
 
 
-
-#get_can(r)
-#go2(r)
-test(r)
+get_can(r)
+go2(r)
+#test(r)
+#calibrate(r)

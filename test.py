@@ -8,6 +8,7 @@ cfactor_r = 1
 speed_l = 0
 speed_r = 0
 r = Robot()
+servo_board = r.servo_board()
 print ("Variables set")
 
 
@@ -112,11 +113,11 @@ def read_ultrasound(sensor):
 
     """
     if sensor == 1:
-          return r.servo_board.read_ultrasound(6,7)
-    if sensor == 2:
-          return r.servo_board.read_ultrasound(8,9)
-    if sensor == 3:
-          return r.servo_board.read_ultrasound(10,11)
+          return servo_board.read_ultrasound(6,7)
+    elif sensor == 2:
+          return servo_board.read_ultrasound(8,9)
+    elif sensor == 3:
+          return servo_board.read_ultrasound(10,11)
 
 
 def turn2(r, direction):

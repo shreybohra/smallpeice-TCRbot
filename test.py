@@ -1,5 +1,8 @@
 from robot import *
 import time
+import random
+
+
 print ("Modules imported")
 Speeds=[0.0,0.25,0.5,0.75,1,0.75,0.5,0.25,0.0,-0.25,-0.5,-0.75,-1,-0.75,-0.5,-0.25]
 
@@ -8,13 +11,14 @@ cfactor_r = 1
 speed_l = 0
 speed_r = 0
 r = Robot()
-servo_board = r.servo_board()
+servo_board = r.servo_board
+
 print ("Variables set")
 
 
 def set_speed(r, speed, wheel = 2):
     global cfactor_l
-    global cfacot_r
+    global cfactor_r
     if wheel == 0:
        r.motor_board.m0 = speed*cfactor_l
        print ("Left wheel speed override.")
@@ -110,7 +114,6 @@ def straighten(r, mode = 1):
 def read_ultrasound(sensor):
     """
     :param sensor: 1 = forward, 2 = right, 3 = left
-
     """
     if sensor == 1:
           return servo_board.read_ultrasound(6,7)
@@ -180,10 +183,23 @@ def middle(r):
 def go2(r):
     """Main running function"""
     set_speed(r, 0.2, wheel = 2)
+    print("Main program initialised.")
+    
+    df = read_ultrasound(1)    
+    dr = read_ultrasound(2)
+    dl = read_ultrasound(3)
+    print (df)
+    print (dr)
+    print (dl)
+    print ("")
+    print ("Ultrasound testing complete. Starting program.")
+    
+
     while True:
-        df = read_ultrasound(1)
+        df = read_ultrasound(1)        
         dr = read_ultrasound(2)
         dl = read_ultrasound(3)
+        
         if df<0.2 and df != 0:
             print ("Stuck...")
             print ("Reversing.")
@@ -291,14 +307,14 @@ def random_bot(r):
     while True:
         df = read_ultrasound(1)
         thing = random.randint(1, 3)
-        if df<0.2 and df != 0:
-            print ("Stuck...")
-            print ("Reversing.")
-            accel(r, wheel = 2, stop = -1, delay = 0.01)
-            time.sleep(0.5)
-            accel(r, wheel = 2, stop = -0.1, delay = 0.01)
+#        if df<0.2 and df != 0:
+#            print ("Stuck...")
+#            print ("Reversing.")
+#            accel(r, wheel = 2, stop = -1, delay = 0.01)
+#            time.sleep(0.5)
+#            accel(r, wheel = 2, stop = -0.1, delay = 0.01)
 
-        elif thing == 1:
+        if thing == 1:
             speed = random.uniform(0, 1)
             wheel = random.randint(0, 2)
             accel(r, wheel = wheel, stop = speed, delay = 0.001)
@@ -321,6 +337,8 @@ print ("Functions set")
 
 
 get_can(r)
+print("Main program starting. ")
 go2(r)
 #test(r)
 #calibrate(r)
+#random_bot(r)

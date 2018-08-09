@@ -213,8 +213,7 @@ def get_can(r):
     accel(r, wheel = 2, stop = 0.5)
     time.sleep(5)
     #r.grab() ##breaks front ultrasound sensor.
-
-print ("Functions set")        
+     
           
 
 def test(r):
@@ -288,7 +287,37 @@ def calibrate(r):
 #        time.sleep(20)
     
         
+def random_bot(r):
+    while True:
+        df = read_ultrasound(1)
+        thing = random.randint(1, 3)
+        if df<0.2 and df != 0:
+            print ("Stuck...")
+            print ("Reversing.")
+            accel(r, wheel = 2, stop = -1, delay = 0.01)
+            time.sleep(0.5)
+            accel(r, wheel = 2, stop = -0.1, delay = 0.01)
 
+        elif thing == 1:
+            speed = random.uniform(0, 1)
+            wheel = random.randint(0, 2)
+            accel(r, wheel = wheel, stop = speed, delay = 0.001)
+        elif thing == 2:
+            speed_l = random.uniform(0, -1)
+            speed_r = random.uniform(0, 1)
+            accel(r, wheel = 0, stop = speed_l, delay = 0.001)
+            accel(r, wheel = 1, stop = speed_r, delay = 0.001)
+        elif thing == 3:
+            speed_r = random.uniform(0, -1)
+            speed_l = random.uniform(0, 1)
+            accel(r, wheel = 0, stop = speed_l, delay = 0.001)
+            accel(r, wheel = 1, stop = speed_r, delay = 0.001)
+        time.sleep(random.uniform(0, 2))
+
+
+
+        
+print ("Functions set")   
 
 
 get_can(r)

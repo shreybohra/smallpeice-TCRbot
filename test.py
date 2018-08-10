@@ -3,7 +3,7 @@ import time
 print ("Modules imported")
 Speeds=[0.0,0.25,0.5,0.75,1,0.75,0.5,0.25,0.0,-0.25,-0.5,-0.75,-1,-0.75,-0.5,-0.25]
 
-cfactor_l = 1
+cfactor_l = 0.96
 cfactor_r = 1
 speed_l = 0
 speed_r = 0
@@ -13,7 +13,7 @@ print ("Variables set")
 
 def set_speed(r, speed, wheel = 2):
     global cfactor_l
-    global cfacot_r
+    global cfactor_r
     if wheel == 0:
        r.motor_board.m0 = speed*cfactor_l
        print ("Left wheel speed override.")
@@ -43,13 +43,13 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
     if stop>speeds_list[wheel]:
         if wheel == 0:
             while speed_l<stop:
-                speed_l = round((speed_l + interval), 2)
+                speed_l = round((speed_l + interval), 4)
                 r.motor_board.m0 = speed_l*cfactor_l
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
         elif wheel == 1:
             while speed_r<stop:
-                speed_r = round((speed_r + interval), 2)
+                speed_r = round((speed_r + interval), 4)
                 r.motor_board.m1 = speed_r*cfactor_r
                 time.sleep(delay)
             print("Right wheel speed set to "+str(speed_r*100)+"%")
@@ -57,7 +57,7 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
         elif wheel == 2:
             straighten(r)
             while speed_l<stop:
-                speed_l = round((speed_l + interval), 2)
+                speed_l = round((speed_l + interval), 4)
                 speed_r = speed_l
                 r.motor_board.m0 = speed_l*cfactor_l
                 r.motor_board.m1 = speed_l*cfactor_r
@@ -67,13 +67,13 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
     if stop<speeds_list[wheel]:
         if wheel == 0:
             while speed_l>stop:
-                speed_l = round((speed_l - interval), 2)
+                speed_l = round((speed_l - interval), 4)
                 r.motor_board.m0 = speed_l*cfactor_l
                 time.sleep(delay)
             print("Left wheel speed set to "+str(speed_l*100)+"%")
         elif wheel == 1:
             while speed_r>stop:
-                speed_r = round((speed_r - interval), 2)
+                speed_r = round((speed_r - interval), 4)
                 r.motor_board.m1 = speed_r*cfactor_r
                 time.sleep(delay)
             print("Right wheel speed set to "+str(speed_r*100)+"%")
@@ -81,7 +81,7 @@ def accel(r, wheel=2, stop=1, interval=0.05, delay=0.05):
         elif wheel == 2:
             straighten(r)
             while speed_l>stop:
-                speed_l = round((speed_l - interval), 2)
+                speed_l = round((speed_l - interval), 4)
                 speed_r = speed_l
                 r.motor_board.m0 = speed_l*cfactor_l
                 r.motor_board.m1 = speed_l*cfactor_r
@@ -290,19 +290,26 @@ def calibrate(r):
 
 def timed(r):
 	accel(r, wheel = 2, stop = 0.5, delay = 0.05)
-	time.sleep(2)
+	time.sleep(1.5)
 	accel(r, wheel =  2, stop = 0)
 	time.sleep(0.1)
 	while True:
-		accel(r, wheel = 0, stop = -0.3)
-		time.sleep(1)
-		accel(r, wheel = 0, stop = 0)
-		time.sleep(0.1)
+		accel(r, wheel = 1, stop = -0.3)
+		time.sleep(0.65)
+		accel(r, wheel = 1, stop = 0)
+		time.sleep(0.5)
 		accel(r, wheel = 2, stop = 1, delay =  0.1)
-		time.sleep(5)
+		time.sleep(2.1)
+		accel(r, wheel = 2, stop = 0)
+		time.sleep(0.5)
+		#time.sleep(0.9)
 
 #get_can(r)
 #go2(r)
 #test(r)
 #calibrate(r)
+#accel(r, wheel = 2, stop = 1, delay = 0.15)
+#time.sleep(5)
+#accel(r, wheel = 2, stop = 1, delay =  0.1)
+#time.sleep(2.45)
 timed(r)

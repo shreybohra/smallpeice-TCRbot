@@ -289,29 +289,21 @@ def calibrate(r):
         
 
 def timed(r):
-	accel(r, wheel = 2, stop = 0.5, delay = 0.05)
-	time.sleep(1.5)
-	accel(r, wheel =  2, stop = 0)
-	time.sleep(0.1)
-	while True:
-		accel(r, wheel = 1, stop = -0.3)
-		time.sleep(0.65)
-		accel(r, wheel = 1, stop = 0)
-		time.sleep(0.5)
-		accel(r, wheel = 2, stop = 1, delay =  0.1)
-		time.sleep(2.1)
-		accel(r, wheel = 2, stop = 0)
-		time.sleep(0.5)
-		#time.sleep(0.9)
+    accel(r, wheel = 2, stop = 0.5, delay = 0.05)
+    time.sleep(1.5)
+    accel(r, wheel =  2, stop = 0)
+    time.sleep(0.1)
+    while True:
+        accel(r, wheel = 1, stop = -0.3)
+        time.sleep(0.65)
+        accel(r, wheel = 1, stop = 0)
+        time.sleep(0.5)
+        accel(r, wheel = 2, stop = 1, delay =  0.1)
+        time.sleep(2.1)
+        accel(r, wheel = 2, stop = 0)
+        time.sleep(0.5)
+        #time.sleep(0.9)
 
-#get_can(r)
-#go2(r)
-#test(r)
-#calibrate(r)
-#accel(r, wheel = 2, stop = 1, delay = 0.15)
-#time.sleep(5)
-#accel(r, wheel = 2, stop = 1, delay =  0.1)
-#time.sleep(2.45)
-r.power_board.buzz(120, frequency=40000)
-print ("Jamming active.")
+
+
 timed(r)

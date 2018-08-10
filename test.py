@@ -312,4 +312,6 @@ def timed(r):
 #time.sleep(5)
 #accel(r, wheel = 2, stop = 1, delay =  0.1)
 #time.sleep(2.45)
+r.power_board.buzz(120, frequency=40000)
+print ("Jamming active.")
 timed(r)
